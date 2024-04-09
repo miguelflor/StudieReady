@@ -1,5 +1,4 @@
 import desk.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
@@ -115,7 +114,7 @@ public class Main {
      *
      * @param studySystem Study system class that will manage all the most important functions of the program.
      */
-    private static void executeCommands(@NotNull StudySystem studySystem) {
+    private static void executeCommands(StudySystem studySystem) {
         Scanner in = new Scanner(System.in);
         Commands command;
 
@@ -184,7 +183,7 @@ public class Main {
      * @param in the Scanner object
      * @param material the material name
      */
-    private static void materialMenu(@NotNull StudySystem studySystem,String material, Scanner in){
+    private static void materialMenu(StudySystem studySystem,String material, Scanner in){
         Commands command;
         do {
             System.out.print(material+ARROW);
@@ -600,7 +599,7 @@ public class Main {
      * @param studySystem study system
      * @param args a List with all the arguments
      */
-    private static void removeMaterial(@NotNull StudySystem studySystem, List<String> args) {
+    private static void removeMaterial( StudySystem studySystem, List<String> args) {
         String name = args.get(1);
         try {
             if(args.size()!=2){
@@ -623,7 +622,7 @@ public class Main {
      * @param studySystem the study system object
      * @param args a List with all the arguments
      */
-    private static void addMaterial(@NotNull StudySystem studySystem, List<String> args){
+    private static void addMaterial( StudySystem studySystem, List<String> args){
         String name = args.get(1);
         try {
             if(args.size()!=2){
@@ -647,7 +646,7 @@ public class Main {
      * @param inString input string
      * @return Commands object.
      */
-    private static Commands getCommand(@NotNull String inString) {
+    private static Commands getCommand(String inString) {
         for (Commands c : Commands.values()) {
             if (c.getCommand().equals(inString)) {
                 return c;

@@ -1,6 +1,6 @@
 package desk;
 
-import org.jetbrains.annotations.NotNull;
+
 
 import java.util.*;
 
@@ -84,7 +84,7 @@ class MaterialClass implements Material{
     }
 
     @Override
-    public int compareTo(@NotNull Material o) {
+    public int compareTo(Material o) {
        return name.compareTo(o.getName());
     }
 
