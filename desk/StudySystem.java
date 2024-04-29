@@ -184,4 +184,38 @@ public interface StudySystem extends Serializable {
      */
     boolean hasMaterial(String material);
 
+    /**
+     * get the number of materials
+     * @return the number of materials
+     */
+    int numMaterials();
+
+    /**
+     * get the number of active materials
+     * @return the number of active materials
+     */
+    int numActiveMaterials();
+
+    /**
+     * get the number of files
+     * @param material the name of the material
+     * @return the number of files
+     */
+    int numFiles(String material);
+
+    /**
+     * get the number of videos
+     * @param material the name of the material
+     * @return the number of videos
+     */
+    int numVideos(String material);
+
+    /**
+     * get the number of online documents
+     * @param material the name of the material
+     * @return the number of online documents
+     */
+    int numOnlineDocs(String material);
+
+
 }

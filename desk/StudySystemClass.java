@@ -2,11 +2,13 @@ package desk;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.*;
 
 public class StudySystemClass implements StudySystem{
     //Serial Version UID of the Class
-    static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
     private static final String ADOBE_DIRECTORY = "C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat";
     private static final String CHROME_DIRECTORY = "C:\\Program Files\\Google\\Chrome\\Application";
     private static final String ADOBE_EXE = "Acrobat.exe";
@@ -18,7 +20,7 @@ public class StudySystemClass implements StudySystem{
     private static final String C = "/c";
 
     private final Map<String,Material> materials;
-    private final Map<String,Map<ContentType,Process>> startedMaterials;
+    private transient Map<String,Map<ContentType,Process>> startedMaterials;
 
     public StudySystemClass(){
         startedMaterials = new HashMap<>();
@@ -35,6 +37,7 @@ public class StudySystemClass implements StudySystem{
 
         materials.put(name,m);
     }
+
 
     @Override
     public void removeMaterial(String name) throws MaterialDoesNotExistException {
@@ -170,6 +173,9 @@ public class StudySystemClass implements StudySystem{
         if(!hasMaterial(materialName)){
             throw new MaterialDoesNotExistException();
         }
+
+        setStartedMaterials(new HashMap<>());
+
         if(startedMaterials.containsKey(materialName)){
             if(!removeClosed(materialName)){
                 throw new AlreadyOpenedException();
@@ -219,6 +225,7 @@ public class StudySystemClass implements StudySystem{
         if(!startedMaterials.containsKey(materialName)){
             throw new ClosedMaterialException();
         }
+        setStartedMaterials(new HashMap<>());
         Map<ContentType,Process> processes = startedMaterials.remove(materialName);
         for (Process process :
                 processes.values()) {
@@ -309,6 +316,32 @@ public class StudySystemClass implements StudySystem{
         return started.iterator();
 
     }
+
+    @Override
+    public int numMaterials() {
+        return materials.size();
+    }
+
+    @Override
+    public int numActiveMaterials() {
+        return startedMaterials.size();
+    }
+
+    @Override
+    public int numFiles(String material) {
+        return materials.get(material).numFiles();
+    }
+
+    @Override
+    public int numVideos(String material) {
+        return materials.get(material).numVideos();
+    }
+
+    @Override
+    public int numOnlineDocs(String material) {
+        return materials.get(material).numOnlineDocs();
+    }
+
 
     //private
 
@@ -417,6 +450,16 @@ public class StudySystemClass implements StudySystem{
     private boolean allClose(String materialName){
         Map<ContentType,Process> processes = startedMaterials.get(materialName);
         return processes==null||processes.isEmpty();
+    }
+
+    /**
+     * starts the variable that contains the al the process started
+     */
+    private void setStartedMaterials(Map<String,Map<ContentType,Process>> sm){
+        if (startedMaterials == null){
+            startedMaterials = sm;
+        }
+
     }
 
 }

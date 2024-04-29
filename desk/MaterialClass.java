@@ -2,6 +2,7 @@ package desk;
 
 
 
+import java.io.Serial;
 import java.util.*;
 
 class MaterialClass implements Material{
@@ -12,7 +13,8 @@ class MaterialClass implements Material{
     private final Map<String,Site> videos;
 
     //Serial Version UID of the Class
-    static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
 
     public MaterialClass(String name){
         this.name = name;

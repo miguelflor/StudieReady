@@ -1,3 +1,5 @@
+import asciitable.*;
+import asciitable.AsciiTableBuilder;
 import desk.*;
 
 import java.io.*;
@@ -22,14 +24,12 @@ public class Main {
     private static final String ALREADY_STARTED = "The material '%s' is already opened!\n";
     private static final String CLOSE = "\nThe %s was close";
     private static final String CLS = "cls";
-    private static final String FILES_PRINT = "Files:\nName\tType\n";
-    private static final String FILE_FORMAT = "%s\t%s\n";
-    private static final String VIDEO_PRINT = "Video:\n\nName\tDomain\n";
-    private static final String VIDEO_FORMAT = "%s\t%s\n";
-    private static final String ONLINE_DOC_PRINT = "Online Documents:\n\nName\tDomain\n";
-    private static final String ONLINE_DOC_FORMAT = "%s\t%s\n";
-    private static final String MATERIAL = "\nMaterial:";
-    private static final String ARROW = ">";
+    private static final String[] FILES_PRINT = {"Files","Name","Type"};
+    private static final String[] VIDEO_PRINT = {"Video","Name","Domain"};
+
+    private static final String[] ONLINE_DOC_PRINT = {"Online Documents","Name","Domain"};
+    private static final String[] MATERIAL = {"Material"};
+    private static final String ARROW = "> ";
     private static final String USAGE = "Usage:";
     private static final String SPACE = " ";
     private static final String FILE_NOT_EXIST = "The file '%s' does not exist\n";
@@ -41,6 +41,10 @@ public class Main {
 
     private static final String HELP = "%s - %s \n";
     private static final String FALSE_ARG = "The command %s does not exist!\n";
+    private static final String[] ACTIVE_MATERIAL = {"Active Material"};
+    private static final int CONTENT_FILES = 3;
+    private static final int CONTENT_DOC = 3;
+    private static final int CONTENT_VIDEOS = 3;
 
 
     public enum Commands{
@@ -103,9 +107,29 @@ public class Main {
      */
     public static void main(String[] args){
 
+
+
+
         StudySystem s = load();
         executeCommands(s);
         save(s);
+
+    }
+
+    /**
+     * Converts headers of strings to type Columns to build a table
+     * @param header header of the table
+     * @return columns of the table
+     */
+    private static Column[] headerAlignment(String[] header){
+       List<Column> c = new ArrayList<Column>();
+
+        for (String s : header) {
+            c.add(new Column().header(s).headerAlign(HorizontalAlign.CENTER).dataAlign(HorizontalAlign.CENTER));
+        }
+        Column[] cc = new Column[c.size()];
+        c.toArray(cc);
+        return cc;
 
     }
 
@@ -154,18 +178,27 @@ public class Main {
                 //switch is more expandable than if
                 switch (args.get(1).toUpperCase()){
                     case "-A":
+                        String[][] contents = new String[1][system.numActiveMaterials()];
+                        int i = 0;
                         for(Iterator<Material> it = system.activeMaterialIterator(); it.hasNext();){
-                            System.out.println(it.next().getName());
+                            contents[0][i] = it.next().getName();
+                            i++;
                         }
+                        System.out.println();
+                        System.out.println(AsciiTable.getTable(headerAlignment(ACTIVE_MATERIAL),contents));
                         break;
                     default:
                         throw new NonexistentArgumentException(args.get(1));
                 }
             }else{
-                System.out.println(MATERIAL);
+                String[][] contents = new String[1][system.numMaterials()];
+                int i = 0;
                 for(Iterator<Material> it = system.materialIterator(); it.hasNext();){
-                    System.out.println(it.next().getName());
+                    contents[0][i] = it.next().getName();
+                    i++;
                 }
+                System.out.println();
+                System.out.println(AsciiTable.getTable(headerAlignment(MATERIAL),contents));
             }
 
 
@@ -188,7 +221,7 @@ public class Main {
         do {
             System.out.print(material+ARROW);
             List<String> args = getArgs(in.nextLine());
-            command = getCommand(args.get(0).toUpperCase());
+            command = getCommand(args.getFirst().toUpperCase());
             switch (command){
                 case ADD_FILE -> addFile(studySystem,material,args);
                 case ADD_ONLINE_DOC -> addOnlineDoc(studySystem,material,args);
@@ -324,30 +357,43 @@ public class Main {
                 throw new WrongUsageException();
             }
             if(studySystem.hasFiles(material)){
-                System.out.println(FILES_PRINT);
+                String[][] content = new String[studySystem.numFiles(material)][CONTENT_FILES];
+                int i = 0;
                 for(Iterator<FileDetails> it = studySystem.fileIterator(material);it.hasNext();){
                     FileDetails f = it.next();
-                    System.out.printf((FILE_FORMAT),f.getName(),f.getType());
+                    content[i][0] = String.valueOf(i);
+                    content[i][1] = f.getName();
+                    content[i][2] = f.getType().toString();
+                    i++;
                 }
                 System.out.println();
+                System.out.println(AsciiTable.getTable(headerAlignment(FILES_PRINT),content));
             }
 
             if(studySystem.hasVideos(material)){
-                System.out.println(VIDEO_PRINT);
+                String[][] content = new String[studySystem.numVideos(material)][CONTENT_VIDEOS];
+                int i = 0;
                 for(Iterator<Site> it = studySystem.videoIterator(material);it.hasNext();){
                     Site s = it.next();
-                    System.out.printf((VIDEO_FORMAT),s.getName(),s.getDomain());
+                    content[i][0] = String.valueOf(i);
+                    content[i][1] = s.getName();
+                    content[i][2] = s.getDomain();
                 }
                 System.out.println();
+                System.out.println(AsciiTable.getTable(headerAlignment(VIDEO_PRINT),content));
             }
 
             if(studySystem.hasOnlineDocs(material)){
-                System.out.println(ONLINE_DOC_PRINT);
+                String[][] content = new String[studySystem.numOnlineDocs(material)][CONTENT_DOC];
+                int i = 0;
                 for (Iterator<Site> it =studySystem.onlineDocIterator(material);it.hasNext();){
                     Site s = it.next();
-                    System.out.printf((ONLINE_DOC_FORMAT),s.getName(),s.getDomain());
+                    content[i][0] = String.valueOf(i);
+                    content[i][1] = s.getName();
+                    content[i][2] = s.getDomain();
                 }
                 System.out.println();
+                System.out.println(AsciiTable.getTable(headerAlignment(ONLINE_DOC_PRINT),content));
             }
 
 
@@ -409,9 +455,17 @@ public class Main {
      * @param args        list of the arguments
      */
     private static void startMaterial(StudySystem studySystem, List<String> args){
-        String name = args.get(1);
-        args.remove(1); // the number of arguments needs to be one, otherwise will raise an exception
-        startMaterial(studySystem,name,args);
+        try {
+            if(args.size()!=2){
+                throw new WrongUsageException();
+            }
+            String name = args.get(1);
+            args.remove(1); // the number of arguments needs to be one, otherwise will raise an exception
+            startMaterial(studySystem,name,args);
+        }catch (WrongUsageException e){
+            System.out.println(NO_ARG);
+        }
+
     }
 
     /**
@@ -584,6 +638,7 @@ public class Main {
             if(!studySystem.hasMaterial(material)){
                 throw new MaterialDoesNotExistException();
             }
+            System.out.println();
             materialMenu(studySystem,material,in);
         }catch (WrongUsageException e){
             Commands cm = Commands.OPEN;
