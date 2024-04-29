@@ -317,6 +317,32 @@ public class StudySystemClass implements StudySystem{
 
     }
 
+    @Override
+    public int numMaterials() {
+        return materials.size();
+    }
+
+    @Override
+    public int numActiveMaterials() {
+        return startedMaterials.size();
+    }
+
+    @Override
+    public int numFiles(String material) {
+        return materials.get(material).numFiles();
+    }
+
+    @Override
+    public int numVideos(String material) {
+        return materials.get(material).numVideos();
+    }
+
+    @Override
+    public int numOnlineDocs(String material) {
+        return materials.get(material).numOnlineDocs();
+    }
+
+
     //private
 
     /**
