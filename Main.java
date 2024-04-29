@@ -409,9 +409,17 @@ public class Main {
      * @param args        list of the arguments
      */
     private static void startMaterial(StudySystem studySystem, List<String> args){
-        String name = args.get(1);
-        args.remove(1); // the number of arguments needs to be one, otherwise will raise an exception
-        startMaterial(studySystem,name,args);
+        try {
+            if(args.size()!=2){
+                throw new WrongUsageException();
+            }
+            String name = args.get(1);
+            args.remove(1); // the number of arguments needs to be one, otherwise will raise an exception
+            startMaterial(studySystem,name,args);
+        }catch (WrongUsageException e){
+            System.out.println(NO_ARG);
+        }
+
     }
 
     /**
