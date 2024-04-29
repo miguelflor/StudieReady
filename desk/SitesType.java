@@ -7,5 +7,5 @@ public enum SitesType implements Serializable {
     DOCUMENT;
 
     //Serial Version UID of the Class
-    static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 }

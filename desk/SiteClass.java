@@ -1,9 +1,12 @@
 package desk;
 
+import java.io.Serial;
+
 class SiteClass implements Site {
 
     //Serial Version UID of the Class
-    static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
     private String name;
     private String URL;
     private final SitesType type;
