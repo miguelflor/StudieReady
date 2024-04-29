@@ -1,5 +1,4 @@
 import asciitable.*;
-import asciitable.AsciiTableBuilder;
 import desk.*;
 
 import java.io.*;
