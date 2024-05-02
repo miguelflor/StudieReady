@@ -177,10 +177,10 @@ public class Main {
                 //switch is more expandable than if
                 switch (args.get(1).toUpperCase()){
                     case "-A":
-                        String[][] contents = new String[1][system.numActiveMaterials()];
+                        String[][] contents = new String[system.numActiveMaterials()][1];
                         int i = 0;
                         for(Iterator<Material> it = system.activeMaterialIterator(); it.hasNext();){
-                            contents[0][i] = it.next().getName();
+                            contents[i][0] = it.next().getName();
                             i++;
                         }
                         System.out.println();
@@ -190,10 +190,10 @@ public class Main {
                         throw new NonexistentArgumentException(args.get(1));
                 }
             }else{
-                String[][] contents = new String[1][system.numMaterials()];
+                String[][] contents = new String[system.numMaterials()][1];
                 int i = 0;
                 for(Iterator<Material> it = system.materialIterator(); it.hasNext();){
-                    contents[0][i] = it.next().getName();
+                    contents[i][0] = it.next().getName();
                     i++;
                 }
                 System.out.println();
